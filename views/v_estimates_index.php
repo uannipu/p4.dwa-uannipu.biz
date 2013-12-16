@@ -32,7 +32,8 @@
                             <?php if ($i % 2 == 1) $classvar = "oddRow"; else $classvar="evenRow"; ?>
                             <tr class="<?php echo $classvar ?>">
                                <?php // $pkg = $row[0] ?>
-                                <td><?=$pkg['work_pckg_id']?> </td>
+                                <td><a href="/estimates/edit/<?=$pkg['work_pckg_id']; ?>"><?=$pkg['work_pckg_id']?></a></td>
+
                                 <td> <?=$pkg['work_pckg_desc'] ?></td>
                                 <td> <?=$pkg['test_program_code'] ?></td>
                                 <td> <?=$pkg['requestor_name']?></td>

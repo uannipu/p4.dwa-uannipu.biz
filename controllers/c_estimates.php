@@ -28,6 +28,35 @@ class estimates_controller extends base_controller {
         }
     }
 
+    /*function to view the add post screen */
+    public function edit($pckgid = NULL) {
+        if(!$this->user) {
+            Router::redirect('/users/login');
+        } else {
+
+            $user = $this->user->user_id;
+
+            # Setup view
+            $q = "select we.work_pckg_id, e.estimation_id, e.test_subject_code, e.work_type_code, e.year, e.hours, e.resource_type_code, e.resource_name from work_pckg_estimates we INNER JOIN estimates e ON
+                  e.estimation_id = we .estimates_id  where work_pckg_id = ".$pckgid. " and user_id = ".$user ;
+
+            $estimates = DB::instance(DB_NAME)->select_rows($q);
+
+            $q1= "select work_type_code, work_type_desc from work_type order by work_type_code asc";
+            $work = DB::instance(DB_NAME)->select_rows($q1);
+            if(!empty($estimates)){
+
+            $this->template->content = View::instance('v_estimates_edit');
+            $this->template->title   = "Add or Update Estimates";
+            $this->template->content->estimates = $estimates;
+            $this->template->content->work = $work;
+
+                # Render template
+            echo $this->template;
+        }
+    }
+    }
+
     /*function to process the form, and store in the database */
     public function p_add() {
         if(!$this->user) {
@@ -37,57 +66,21 @@ class estimates_controller extends base_controller {
                $dataArr = array();
                $dataArr = $_POST['arr'];
                $currdate = Time::now();
-               echo $currdate;
-            foreach ($dataArr as $v1) {
-                echo $v1[6];
-                    $data = Array(
-                        "test_program_code" => $v1[0],
-                        "test_subject_code" => $v1[1],
-                        "year" => $v1[2],
-                        "work_type_code" => $v1[3],
-                        "hours" => $v1[4],
-                        "user_id" => $this->user->user_id,
-                        "resource_type_code" =>$v1[5],
-                        "resource_name" =>$v1[6]
-                    );
-                    DB::instance(DB_NAME)->insert('estimates', $data);
-
-            }
-                echo "success";
-      /*      for($i = 0; $i < count($dataArr); $i++) {
-                $mysqldata = $dataArr[i];
-                for($j=0; $j<10; $j++){
-                    echo $dataArr[i][j];
-                }
-            }
-*/
-          //      var_dump($dataArr);
-/*
-                for($i = 0; $i < count($dataArr); $i++) {
-                    $mysqldata = $dataArr[i];
+                foreach ($dataArr as $v1) {
                         $data = Array(
-                            "creation_date" => Time::now(),
-                            "modified_date" => Time::now(),
-                            "test_program_code" => $mysqldata[0],
-                            "test_subject_code" => $mysqldata[1],
-                            "work_type_code" => $mysqldata[2],
-                            "year" => $mysqldata[3],
-                            "hours" => $mysqldata[4],
-                            "resource_type_code" => $mysqldata[5],
-                            "user_id" => $this->user->user_id
-                     );
+                            "test_program_code" => $v1[0],
+                            "test_subject_code" => $v1[1],
+                            "year" => $v1[2],
+                            "work_type_code" => $v1[3],
+                            "hours" => $v1[4],
+                            "user_id" => $this->user->user_id,
+                            "resource_type_code" =>$v1[5],
+                            "resource_name" =>$v1[6]
+                        );
+                        DB::instance(DB_NAME)->insert('estimates', $data);
 
-                   DB::instance(DB_NAME)->insert('estimates', $data);
-                    echo 'success';
                 }
-*/
-           // $this->template->content->estimates =$_POST['arr'] ;
-         //   $data = Array('test_program_code'=> 'dummy', 'test_program_desc' =>'dummier');
-          //  DB::instance(DB_NAME)->insert("test_program",$data);
-          //  $this->template->content = View::instance('v_debug');
-          //  $this->template->content = 'hello';
-           // echo $this->template;
-           // Router::redirect("/estimates/index/".$user);
+                echo "success";
             }
     }
 
@@ -116,140 +109,50 @@ class estimates_controller extends base_controller {
                 INNER JOIN users
                     ON p.user_id = users.user_id
                 WHERE users.user_id ='.$user_id .' order by p.work_pckg_id DESC';
-
                 $packages = DB::instance(DB_NAME)->select_rows($q);
                 $packagesNew = $this-> updateAmount($packages,$user_id);
-                    var_dump($packagesNew);
-
                 # Pass data to the View
                 $this->template->content->packagesNew = $packagesNew ;
-      //          $this->template->content->totalArr = $totalArr;
-
                 # Render the View
                 echo $this->template;
             }
     }
 
     private function updateAmount($packages,$user_id ){
-        /*foreach($packages as $pkg){
-            $total = $this-> calculate($pkg['work_pckg_id'],$user_id);
-
-//                   $totalArr['total'.$pkg['work_pckg_id']] = $total;
-            $packageId = $pkg['work_pckg_id'];
-            $pkg['total'] = $total;
-            //                  echo $packageId;
-            $totalArr[$packageId] = $pkg;
-        }
-*/
         foreach($packages as $pkg){
             $pCode = $pkg['work_pckg_id'];
 
-        # Query
-        $q = 'SELECT
-                    p.work_pckg_id,
-                    we.estimates_id,
-                    p.work_pckg_desc,
-                    p.requestor_name,
-                    p.user_id AS user_id,
-                    e.hours,
-                    e.resource_type_code,
-                    res.hourly_rate
-                FROM work_package p
-                INNER JOIN work_pckg_estimates we
-                    ON  we.work_pckg_id = p.work_pckg_id
-                INNER JOIN estimates e
-                    ON we.estimates_id = e.estimation_id
-                INNER JOIN resource_type res
-                    ON res.resource_type_code = e.resource_type_code
-                WHERE p.user_id ='.$user_id .'
-                AND p.work_pckg_id = '.$pCode.' order by we.estimates_id DESC';
+            # Query
+            $q = 'SELECT
+                        p.work_pckg_id,
+                        we.estimates_id,
+                        p.work_pckg_desc,
+                        p.requestor_name,
+                        p.user_id AS user_id,
+                        e.hours,
+                        e.resource_type_code,
+                        res.hourly_rate
+                    FROM work_package p
+                    INNER JOIN work_pckg_estimates we
+                        ON  we.work_pckg_id = p.work_pckg_id
+                    INNER JOIN estimates e
+                        ON we.estimates_id = e.estimation_id
+                    INNER JOIN resource_type res
+                        ON res.resource_type_code = e.resource_type_code
+                    WHERE p.user_id ='.$user_id .'
+                    AND p.work_pckg_id = '.$pCode.' order by we.estimates_id DESC';
 
-        $estimates = DB::instance(DB_NAME)->select_rows($q);
-        $totHrs = 0; $totAmt = 0;
-        foreach($estimates as $est){
-            /*           echo 'id : '. $est['estimates_id'];
-                       echo 'hours : '. $est['hours'];
-                       echo 'resource type: '. $est['resource_type_code'];
-                       echo 'hourly rate: '. $est['hourly_rate']; */
-            $totHrs = $totHrs +$est['hours'];
-            $totAmt = $totAmt + ($totHrs * $est['hourly_rate']);
-        }
+            $estimates = DB::instance(DB_NAME)->select_rows($q);
+            $totHrs = 0; $totAmt = 0;
+                foreach($estimates as $est){
+                    $totHrs = $totHrs +$est['hours'];
+                    $totAmt = $totAmt + ($totHrs * $est['hourly_rate']);
+                }
             $pkg['totalHours'] = $totHrs;
             $pkg['totalAmount'] = $totAmt;
-            var_dump($pkg);
             $packagesNew[$pCode]=$pkg;
         }
         return $packagesNew;
-    }
-
-    private function calculate($pkgid,$user_id ){
-    # Query
-        $q = 'SELECT
-                    p.work_pckg_id,
-                    we.estimates_id,
-                    p.work_pckg_desc,
-                    p.requestor_name,
-                    p.user_id AS user_id,
-                    e.hours,
-                    e.resource_type_code,
-                    res.hourly_rate
-                FROM work_package p
-                INNER JOIN work_pckg_estimates we
-                    ON  we.work_pckg_id = p.work_pckg_id
-                INNER JOIN estimates e
-                    ON we.estimates_id = e.estimation_id
-                INNER JOIN resource_type res
-                    ON res.resource_type_code = e.resource_type_code
-                WHERE p.user_id ='.$user_id .'
-                AND p.work_pckg_id = '.$pkgid   .' order by we.estimates_id DESC';
-
-        $estimates = DB::instance(DB_NAME)->select_rows($q);
-        $totHrs = 0; $totAmt = 0;
-       foreach($estimates as $est){
-/*           echo 'id : '. $est['estimates_id'];
-           echo 'hours : '. $est['hours'];
-           echo 'resource type: '. $est['resource_type_code'];
-           echo 'hourly rate: '. $est['hourly_rate']; */
-           $totHrs = $totHrs +$est['hours'];
-           $totAmt = $totAmt + ($totHrs * $est['hourly_rate']);
-       }
-        $total["totalHours"]   = $totHrs;
-        $total["totalAmount"] = $totAmt;
-        $total["pckgid"] = $pkgid;
-    //    echo 'total hours : '. $totHrs .'| '.$est['hourly_rate'];
-        return $total;
-    }
-    public function indexBK() {
-
-        if(!$this->user) {
-            Router::redirect('/users/login');
-        } else {
-            # Set up the View
-            $this->template->content = View::instance('v_estimates_index');
-            $this->template->title   = "All Estimates";
-            $user_id = $this->user->user_id;
-            # Query
-            $q = 'SELECT
-                    est.test_program_code,
-                    est.test_subject_code,
-                    est.hours,
-                    est.creation_date,
-                    est.user_id AS user_id,
-                    users.first_name,
-                    users.last_name
-                FROM estimates est
-                INNER JOIN users
-                    ON est.user_id = users.user_id
-                WHERE users.user_id ='.$user_id .' order by est.estimation_id DESC';
-
-            $estimates = DB::instance(DB_NAME)->select_rows($q);
-
-            # Pass data to the View
-            $this->template->content->estimates =$estimates ;
-
-            # Render the View
-            echo $this->template;
-        }
     }
 
 }
