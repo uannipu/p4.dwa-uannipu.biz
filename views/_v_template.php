@@ -22,17 +22,18 @@
 
 <body>
 <div id="container">
-    <div id="header"> <p>Testing Forum</p></div>
+    <div id="header"> <p>Plan <View></View></p></div>
     <!-- Menu for users who are logged in -->
     <?php if($user): ?>
 
  		<div id="nav">
 			<ul>
-				<li><a href='/posts'>Home</a></li>
+				<li><a href='/estimates'>Home</a></li>
 				<li><a href='/users/updateProfile'>Update Profile</a></li>
-				<li><a href='/estimates/users'>See other Estimates</a></li>
-                <li><a href="/estimates/user/<?=$user->user_id;?>">View My Estimates</a></li>
-                <li><a href='/estimates/add'>Add Estimates</a></li>
+				<!--<li><a href='/estimates/users'>See other Estimates</a></li> -->
+                <li><a href='/estimates'>View/update My Estimates</a></li>
+                <!--<li><a href="/estimates/user/<?=$user->user_id;?>">View/update My Estimates</a></li>-->
+               <!-- <li><a href='/estimates/add'>Add Estimates</a></li> -->
                 <li><a href='/users/logout'>Logout</a></li>
 
             </ul>
