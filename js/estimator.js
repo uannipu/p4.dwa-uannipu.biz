@@ -74,6 +74,11 @@
         var tot = 0;
         var myChildren = $('.hrs').children("input[name*='hr']"); // get the values of hour field
         var names = $('.hrs').children("input[name*='name']"); // get the values of resource name field
+        var subj = $('.hrs').children("input[name*='subj']"); // get the values of resource name field
+        var work = $('.hrs').children("select[name*='typ']"); // get the values of resource name field
+        var year = $('.hrs').children("select[name*='year']"); // get the values of resource name field
+
+
         // iterate through the array and check if hour is not a number, throw an error
         for ( var i=0; i<myChildren.length; i++){
             var tmp = ($(myChildren[i]).val().trim());
@@ -103,7 +108,8 @@
         // Array to hold rates of resources by type
         var rates = {"D":100, "T" :75 , "B": 85, "A":120};
         // select all the resources by the drop down box
-        var res = $('.hrs').children('select');
+      //  var res = $('.hrs').children('select');
+        var res = $('.hrs').children("select[name*='res']"); // get the values of hour field
 
         var dollar =0; var rate=0 ;
         // iterate through to populate the values on the preview pane dynamically and calculate the total amount and hours
@@ -129,12 +135,21 @@
             }
             $('table tr:nth-child('+cnt+') td:nth-child(5)').html($(myChildren[i]).val());
             $('table tr:nth-child('+cnt+') td:nth-child(7)').html($(names[i]).val());
+
+            $('table tr:nth-child('+cnt+') td:nth-child(3)').html($(subj[i]).val());
+            $('table tr:nth-child('+cnt+') td:nth-child(1)').html($(year[i]).val());
             //if drop down box value is empty, then set the text value to blank for the display purposes on the preview
             var resDesc =  $(res[i]).find("option:selected").text();
             if(rate == 0){
                 resDesc = '';
             }
+            var workTypeDesc =  $(work[i]).find("option:selected").text();
+            if($(work[i]).val() == '') workTypeDesc = '';
+            var yearDesc =  $(year[i]).find("option:selected").text();
+            if($(year[i]).val() == '') yearDesc = '';
+            $('table tr:nth-child('+cnt+') td:nth-child(2)').html(workTypeDesc);
             $('table tr:nth-child('+cnt+') td:nth-child(4)').html(resDesc);
+            $('table tr:nth-child('+cnt+') td:nth-child(1)').html(yearDesc);
             dollar = dollar + rate; // calculate the dollar amount in a loop
         }
         // set the output divs for the preview
@@ -156,15 +171,18 @@
 
     $(document).ready(function() {
          $('#more').click(function() {
-               if(validate()){
+               if(true){
                 // check the total number of divs with class=hrs, there is always a min of 1 div with hrs.
                 var num     = $('.hrs').length;
                 var newNum  = new Number(num + 1); // increment the number by 1
                 // clone an existing div with id as input1 and change the attributes of the children elements by incrementing the id, name
                 var newElem = $('#input' +num).clone().attr('id', 'input' + newNum);
 
-                newElem.children(':first').attr('id', 'hr' + newNum).attr('hr', 'hr' + newNum).val('');
-                newElem.find('select').attr('id', 'res' + newNum).attr('name', 'res' + newNum).attr('value','');
+                newElem.children(':first').attr('id', 'year' + newNum).attr('year', 'year' + newNum).val('');
+                newElem.find("select[name^=typ]").attr('id', 'typ' + newNum).attr('typ', 'typ' + newNum).val('');
+                newElem.find("input[name^=subj]").attr('id', 'subj' + newNum).attr('subj', 'subj' + newNum).val('');
+                newElem.find("input[name^=hr]").attr('id', 'hr' + newNum).attr('hr', 'hr' + newNum).val('');
+                newElem.find("select[name^=res]").attr('id', 'res' + newNum).attr('name', 'res' + newNum).attr('value','');
                 newElem.children(':last').attr('id', 'name' + newNum).attr('name', 'name' + newNum).val(''); // after cloning, set the values to blanks
 
                 $('#input' + num).after(newElem); // add the new element after the previous input div element
@@ -244,8 +262,13 @@
         function calculate() {
 
             var tot = 0;
-            var myChildren = $('.hrs').children("input[name*='hr']");
-            var resNames = $('.hrs').children("input[name*='name']");
+
+            var myChildren = $('.hrs').children("input[name*='hr']"); // get the values of hour field
+            var resNames = $('.hrs').children("input[name*='name']"); // get the values of resource name field
+            var subj = $('.hrs').children("input[name*='subj']"); // get the values of resource name field
+            var work = $('.hrs').children("select[name*='typ']"); // get the values of resource name field
+            var year = $('.hrs').children("select[name*='year']"); // get the values of resource name field
+
             for ( var i=0; i<myChildren.length; i++){
                 var num = Math.floor($(myChildren[i]).val());
                tot = tot+num;
@@ -253,13 +276,14 @@
 
             var rates = {"D":100, "T" :75 , "B": 85, "A":120};
 
-            var res = $('.hrs').children('select');
+            var res = $('.hrs').children("select[name^=res]");
+                //$('.hrs').children('select');
             var dollar =0; var rate=0 ;
             var rowArr = [];
             for ( var i=0; i<res.length; i++){
                 var opt = ($(res[i]).val());
 
-                rowArr[i] = [$('#pgm').val(),$('#subj').val(),$('#year').val(),$('#typ').val(),$(myChildren[i]).val(),opt,$(resNames[i]).val()];
+                rowArr[i] = [$(year[i]).val(),$(work[i]).val(),$(subj[i]).val(),$(myChildren[i]).val(),opt,$(resNames[i]).val()];
    /*             rowArr[i][1] = $('#sub');
                 rowArr[i][2]=$('#typ');
                 rowArr[i][3]=$('#year');
@@ -290,8 +314,9 @@
         This function makes the ajax call to back end to save the results
      */
 
-    $('#save').click(function() {
-        alert("I am in");
+    function updateEst(pckgId){
+    //$('#save').click(function(pckgId) {
+       // alert('I am in : '+pckgId);
         var arr = calculate();
         $.ajax({
             type:'POST',
@@ -300,7 +325,8 @@
                 $('#results').html(response);
             },
             data: {
-                arr:arr
+                arr:arr,
+                workPckgId: pckgId
             }
-        });
-    });
+       });
+    }
