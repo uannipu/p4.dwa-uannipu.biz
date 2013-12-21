@@ -118,13 +118,16 @@ class estimates_controller extends base_controller {
                             "resource_type_code" =>$v1[4],
                             "resource_name" =>$v1[5]
                         );
-                    $data2 = Array(
-                        "work_pckg_id" => $pckgId,
-                        "estimates_id" => 12
-                    );
-                        DB::instance(DB_NAME)->insert("estimates", $data);
-                        DB::instance(DB_NAME)->insert("work_pckg_estimates", $data2);
 
+                       $est= DB::instance(DB_NAME)->insert("estimates", $data);
+
+
+                        var_dump($est);
+                        $data2 = Array(
+                            "work_pckg_id" => $pckgId,
+                            "estimates_id" => $est
+                        );
+                        DB::instance(DB_NAME)->insert("work_pckg_estimates", $data2);
                     echo "done";
                 }
                 echo "success";

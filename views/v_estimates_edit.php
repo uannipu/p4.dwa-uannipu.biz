@@ -31,7 +31,7 @@
                         <option <?php if($res['resource_type_code'] == $est['resource_type_code']) { ?> selected="<?php echo $res['resource_type_code']; ?>" <?php } ?> value="<?php echo $res['resource_type_code']; ?>"><?php echo $res['resource_type_desc']; ?></option>
                     <?php endforeach ?>
                 </select>
-                <input type="text" name="name<?=$i ?>" id="name<?=$i ?>" onkeyup="recalc()" value=<?=$est['resource_name'] ?> />
+                <input type="text" name="name<?=$i ?>" id="name<?=$i ?>" onkeyup="recalc()" value=<?=$est['resource_name'] ?> >
                 </div>
             <?php $i++; endforeach ?>
             <br/>
