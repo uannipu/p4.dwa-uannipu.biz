@@ -122,13 +122,13 @@ class estimates_controller extends base_controller {
                        $est= DB::instance(DB_NAME)->insert("estimates", $data);
 
 
-                        var_dump($est);
+                      //  var_dump($est);
                         $data2 = Array(
                             "work_pckg_id" => $pckgId,
                             "estimates_id" => $est
                         );
                         DB::instance(DB_NAME)->insert("work_pckg_estimates", $data2);
-                    echo "done";
+                    //echo "done";
                 }
                 echo "success";
             }
