@@ -99,7 +99,7 @@ class estimates_controller extends base_controller {
 
             if(count($estIdArr)> 0){
                $where_condition2 = "WHERE estimation_id in (".$appendStr.")";
-                echo $where_condition ."\n" . "| ".$where_condition2;
+               // echo $where_condition ."\n" . "| ".$where_condition2;
                // echo $where_condition2;
                 DB::instance(DB_NAME)-> delete("work_pckg_estimates", $where_condition);
                 DB::instance(DB_NAME)-> delete("estimates", $where_condition2);
