@@ -8,7 +8,7 @@
         <form name='myForm' >
             <h2><div id='results'></div></h2>
             <h2>Testing program: <?=$currentPckg['test_program_desc'] ?></h2>
-            <h2 id='h2sp'>Hours: Type: Name:</h2>
+            <h3 id='h2sp'>Year: WorkType: Subject: Hours: ResourceType: Name:</h3>
             <?php $i=1; ?>
             <div id='hours-error'></div>
             <div id='years-error'></div>

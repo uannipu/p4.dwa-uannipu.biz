@@ -104,11 +104,15 @@
                 $('#input' + num).after(newElem); // add the new element after the previous input div element
                 $('#newElem').append('<BR>');
                 $('#input' + num).html='';
-                if(num -1 == 1){
+                var rowlen    = $('.hrs').length;
+                if (rowlen == 1)
+                    $('#btnDel').attr('disabled',true);
+                else $('#btnDel').attr('disabled',false);
+                /*if(num -1 == 1){
                     $('#btnDel').attr('disabled',true); // disable the remove button on load
                 } else {
                     $('#btnDel').attr('disabled',false);
-                }
+                }*/
 
                 // add new rows on the preview table at the same time , each time the more button is clicked.
                 var clsvar;

@@ -156,8 +156,7 @@ class estimates_controller extends base_controller {
                     $j=0;
                     $modified = Time::now();
                     $datedisplay = Time::display($modified,"Y-m-d G:i");
-                    echo "modified date is : ".$modified;
-                    foreach ($dataArr as $v1) {
+                      foreach ($dataArr as $v1) {
                             $data = Array(
                                 "test_subject_code" => $v1[2],
                                 "year" => $v1[0],

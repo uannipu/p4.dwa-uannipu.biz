@@ -7,7 +7,7 @@ General
 }
 
 h1 {
-    text-align:center;
+    text-align:left;
     font-size:30px;
     margin-top:25px;
     margin-bottom:25px;
@@ -19,10 +19,12 @@ h2 {
     margin-bottom:5px;
  }
 #h2sp {
+    margin-left:10px;
+    text-align:left;
     font-size:15px;
-    margin-top:30px;
-    margin-bottom:5px;
-    word-spacing: 33pt
+    margin-top:20px;
+    margin-bottom:3px;
+    word-spacing: 20pt;
 }
 
 small {
@@ -121,6 +123,8 @@ Layout
     width:625px;
     text-align:center;
     border:10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 
 
@@ -137,14 +141,11 @@ Card
 
 #canvas {
     border:2px solid;
-    width:615px;
-    height:400px;
+    width:100%;
     position:relative;
-    top:33px;
-    left:16px;
-    z-index:1; /* So we can place the stickers above */
-    overflow:hidden;
-}
+    padding-bottom: 1px;
+    padding-top: 10px;
+    }
 #est{
     border-collapse: collapse;
     width:100%
@@ -172,5 +173,9 @@ table,th,td{
 .hrs #details { clear: both;  width: 920px; margin: 40px auto 20px;  }
 .hrs #details td { vertical-align: top; border: 2px solid #efefef; }
 .hrs #details td { vertical-align: top; border: 2px solid #efefef; }
-
+.hrs {
+    margin-left: 10px;
+    float:left;
+    margin-bottom: 10px;
+}
 
