@@ -125,6 +125,7 @@ class estimates_controller extends base_controller {
         if(!$this->user) {
             Router::redirect('/users/login');
         } else {
+               $_POST = DB::instance(DB_NAME)->sanitize($_POST);
                $user = $this->user->user_id;
                $dataArr = $_POST['arr'];
                $pckgId =$_POST['workPckgId'];
@@ -153,6 +154,9 @@ class estimates_controller extends base_controller {
 
                // rowArr[i] = [$(year[i]).val(),$(work[i]).val(),$(subj[i]).val(),$(myChildren[i]).val(),opt,$(resNames[i]).val()];
                     $j=0;
+                    $modified = Time::now();
+                    $datedisplay = Time::display($modified,"Y-m-d G:i");
+                    echo "modified date is : ".$modified;
                     foreach ($dataArr as $v1) {
                             $data = Array(
                                 "test_subject_code" => $v1[2],
@@ -161,7 +165,9 @@ class estimates_controller extends base_controller {
                                 "hours" => $v1[3],
                                 "user_id" => $user,
                                 "resource_type_code" =>$v1[4],
-                                "resource_name" =>$v1[5]
+                                "resource_name" =>$v1[5],
+                                "creation_date" =>$datedisplay,
+                                "modified_date"=>$datedisplay
                             );
 
                            $est= DB::instance(DB_NAME)->insert("estimates", $data);
