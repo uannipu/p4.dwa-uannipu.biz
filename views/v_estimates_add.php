@@ -1,15 +1,22 @@
 
 <div id='wrapper'>
 
-    <h1>Estimations for testing program :</h1>
+    <h1>Estimations for testing program :<?=$currentPckg['test_program_desc'] ?></h1>
 
     <!-- Left side with all the controls -->
     <div id='controls'>
         <form name='myForm' >
-
-            <h2>Testing program:</h2>
+            <h2><div id='results'></div></h2>
+            <h2>Testing program: <?=$currentPckg['test_program_desc'] ?></h2>
             <h2 id='h2sp'>Hours: Type: Name:</h2>
             <?php $i=1; ?>
+            <div id='hours-error'></div>
+            <div id='years-error'></div>
+            <div id='work-error'></div>
+            <div id='subj-error'></div>
+            <div id='res-error'></div>
+            <div id='resname-error'></div>
+
             <div class='hrs' id='input<?=$i ?>'>
 
                     <select id='year<?=$i ?>' name='year<?=$i ?>'  value=<?=$est['year']?> onchange="recalc()" >
@@ -53,11 +60,10 @@
     <div id='preview'>
         <div id='card-background'>
             <div id='canvas'>
-                <div id='test-program-output'><h2>Testing program: </h2></div>
+                <div id='test-program-output'><h2>Testing program:<?=$currentPckg['test_program_desc'] ?> </h2></div>
                 <table id='est' class='tableData'>
                     <thead>
                     <tr id="firstrow">
-                        <td>Estimation Id</td>
                         <td>Year</td>
                         <td>Work</td>
                         <td>Subject</td>
@@ -71,7 +77,6 @@
                     <tbody id="ebody">
                     <?php $i=1; ?>
                         <tr class="rowcls" id="row<?=$i?>">
-                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -98,6 +103,7 @@
 </div>
 <!-- end of wrapper -->
 <script src="/js/estimator.js"></script>
+<script src="/js/validate.js" /></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="/js/jquery.form.js"></script>
 

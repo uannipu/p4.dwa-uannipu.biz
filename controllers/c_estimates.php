@@ -174,10 +174,11 @@ class estimates_controller extends base_controller {
                             );
                         $response[$j] =  DB::instance(DB_NAME)->insert("work_pckg_estimates", $data2);
                         $j++;
-                        echo "done";
                     }
                 }
-     }
+                echo "Estimates have been updated successfully";
+
+    }
 
     /* Function for home page once the user logs in.
        This function gets the posts of the users that the logged in user follows.

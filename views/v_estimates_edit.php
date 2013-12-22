@@ -6,10 +6,11 @@
     <!-- Left side with all the controls -->
     <div id='controls'>
         <form name='myForm' >
-
+            <h2><div id='results'></div></h2>
             <h2>Testing program: <?=$estimates[0]['test_program_desc'] ?></h2>
             <h2 id='h2sp'>Hours: Type: Name:</h2>
             <?php $i = 1; foreach($estimates  as $est): ?>
+
                 <div id='hours-error'></div>
                 <div id='years-error'></div>
                 <div id='work-error'></div>

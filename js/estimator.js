@@ -1,71 +1,3 @@
-/**
- * This function is invoked on key up event of program field
- */
-    $('#pgm').keyup(function() {
-
-        // Find out what is in the field
-        var value = $(this).val();
-
-        var how_many_characters = value.length;
-
-        var how_many_left = 14 - how_many_characters;
-
-        if(how_many_left == 0) {
-            $('#pgm-error').css('color','red');
-        }
-        else if(how_many_left < 5) {
-            $('#pgm-error').css('color','orange');
-        }
-        $('#pgm-error').html('You have ' + how_many_left + ' characters left.');
-
-        // Place the message in the table
-        $('#test-program-output').html('Test Program :' + value);
-        $('#test-program-output').css('background-color','cyan');
-
-    });
-
-    /**
-     *  This function is invoked on a key up event of test subject
-     */
-
-    $('#subj').keyup(function() {
-
-        // Find out what is in the field
-        var value = $(this).val();
-
-        var how_many_characters = value.length;
-
-        var how_many_left = 14 - how_many_characters;
-
-        if(how_many_left == 0) {
-            $('#subj-error').css('color','red');
-        }
-        else if(how_many_left < 5) {
-            $('#subj-error').css('color','orange');
-        }
-        $('#subj-error').html('You have ' + how_many_left + ' characters left.');
-
-        $('table tr:nth-child(2) td:nth-child(3)').html(value);
-    });
-
-    /**
-     * This function is invoked on change event of year
-     */
-     $('#year').change(function() {
-           var value = $(this).val();
-           var texto = $('table tr:nth-child(2) td:nth-child(1)');
-           texto.html(value);
-     });
-
-    /**
-     * This function is invoked on change event of work type
-     */
-
-     $('#typ').change(function() {
-             var op =  $(this).find("option:selected").text();
-             var texto = $('table tr:nth-child(2) td:nth-child(2)');
-             texto.html(op);
-     });
     /**
      * this function gets invoked on change event of the hours, resource type and resource name.
      * This method calculates the hours and amount based on the input fields dynamically.
@@ -80,33 +12,17 @@
         var work = $('.hrs').children("select[name*='typ']"); // get the values of resource name field
         var year = $('.hrs').children("select[name*='year']"); // get the values of resource name field
 
-
-        // iterate through the array and check if hour is not a number, throw an error
         for ( var i=0; i<myChildren.length; i++){
             var tmp = ($(myChildren[i]).val().trim());
             // check only if the length of the field > 1
             if (tmp.length >= 1) {
-                    if(isNaN(tmp)){
-                        alert('Hours has to be a valid number');
-                        return;
-                    } else {
-                        var num = Math.floor($(myChildren[i]).val());
-                        tot = tot+num;
-                    }
-            }
-        }
-        // iterate thru and check if resource name is alpha characters.
-        for ( var i=0; i<names.length; i++){
-            var tmp = ($(names[i]).val().trim());
-            // check only if the length of the field > 1
-            if (tmp.length >= 1) {
-                var regexLetter = /[a-zA-z]/;
-              if(!regexLetter.test(tmp)){
-                    alert('Name is invalid, please enter alphabets');
-                  return false;
+                if(!isNaN(tmp)){
+                    var num = Math.floor($(myChildren[i]).val());
+                    tot = tot+num;
                 }
             }
         }
+
         // Array to hold rates of resources by type
         var rates = {"D":100, "T" :75 , "B": 85, "A":120};
         // select all the resources by the drop down box
@@ -172,9 +88,10 @@
 
     $(document).ready(function() {
          $('#more').click(function() {
+             var num     = $('.hrs').length;
                if(validate()){
                 // check the total number of divs with class=hrs, there is always a min of 1 div with hrs.
-                var num     = $('.hrs').length;
+
                 var newNum  = new Number(num + 1); // increment the number by 1
                 // clone an existing div with id as input1 and change the attributes of the children elements by incrementing the id, name
                 var newElem = $('#input' +num).clone().attr('id', 'input' + newNum);
@@ -232,7 +149,9 @@
                  if (num-1 == 1)
                      $('#btnDel').attr('disabled',true);
              });
-           //  $('#btnDel').attr('disabled',true); // by default, remove button is disabled.
+            var rowlen    = $('.hrs').length;
+            if (rowlen == 1)
+                $('#btnDel').attr('disabled',true);
          });
 
         /*
@@ -324,6 +243,7 @@
                 url: '/estimates/p_add',
                 success: function(response) {
                     $('#results').html(response);
+                    $('#results').css('color','green');
                 },
                 data: {
                     arr:arr,
