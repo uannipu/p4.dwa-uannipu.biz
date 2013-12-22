@@ -21,9 +21,9 @@
                 <div class='hrs' id='input<?=$i ?>'>
                 <select id='year<?=$i ?>' name='year<?=$i ?>'  value=<?=$est['year']?> onchange="recalc()" >
                     <option value=''>Select</option>
-                    <option value='2014'>2014</option>
-                    <option value='2015'>2015</option>
-                    <option value='2016'>2016</option>
+                    <option value='2014' <?=($est['year'] == 2014)? ' selected="selected"':''?>>2014</option>
+                    <option value='2015'<?=($est['year'] == 2015)? ' selected="selected"':''?>>2015</option>
+                    <option value='2016' <?=($est['year'] == 2016)? ' selected="selected"':''?>>2016</option>
                 </select>
                     <select id='typ<?=$i ?>' name='typ<?=$i ?>' onchange="recalc()">
                         <option value=''>Select</option>

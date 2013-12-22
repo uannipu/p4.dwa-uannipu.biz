@@ -217,9 +217,7 @@
      */
 
     function updateEst(pckgId){
-    //$('#save').click(function(pckgId) {
         if(validate()){
-         //   alert('validated!!');
             var arr = calculate();
             $.ajax({
                 type:'POST',
