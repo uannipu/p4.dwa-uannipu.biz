@@ -58,7 +58,6 @@
     </div>
     <!-- Right side with the live preview -->
     <div id='preview'>
-        <div id='card-background'>
             <div id='canvas'>
                 <div id='test-program-output'><h2>Testing program:<?=$currentPckg['test_program_desc'] ?> </h2></div>
                 <table id='est' class='tableData'>
@@ -89,7 +88,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
         <div id='total-hours-output'>Total hours :</div> <BR>
         <div id='total-amount-output'>Total amount : </div> <BR>
 
