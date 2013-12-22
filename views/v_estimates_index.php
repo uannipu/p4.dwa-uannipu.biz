@@ -10,12 +10,11 @@
         </div>
         <div>
         <p>  <?php if(isset($error)):?>User with this email id already exists <?php endif; ?> </p>
-            <table id="scheduleInfo">
-            <tr>
-                <td id="currentSchedule"  class="tableData">
+
                     <h3>View Work Packages</h3>
                     <p>List of packges assigned to application : </p>
-                    <table class="topics">
+                    <table class="topics" id="example">
+                        <thead>
                         <tr>
                             <th>Packaged ID</th>
                             <th>Package Desc</th>
@@ -23,9 +22,9 @@
                             <th>Requestor name</th>
                             <th>Total Hours</th>
                             <th>Total Amount</th>
-
-                            <th></th>
                         </tr>
+                        </thead>
+                        <tbody>
                         <?php $classvar="" ; $i=0;?>
                         <?php foreach($packagesNew  as $pkg): ?>
 
@@ -33,25 +32,28 @@
                             <tr class="<?php echo $classvar ?>">
                                <?php // $pkg = $row[0] ?>
                                 <td><a href="/estimates/edit/<?=$pkg['work_pckg_id']; ?>"><?=$pkg['work_pckg_id']?></a></td>
-
-                                <td> <?=$pkg['work_pckg_desc'] ?></td>
-                                <td> <?=$pkg['test_program_code'] ?></td>
+                                <td><a href="/estimates/edit/<?=$pkg['work_pckg_id']; ?>"><?=$pkg['work_pckg_desc'] ?></a></td>
+                                <td> <?=$pkg['test_program_desc'] ?></td>
                                 <td> <?=$pkg['requestor_name']?></td>
                                 <td> <?=$pkg['totalHours']?></td>
                                 <td> <?=$pkg['totalAmount']?></td>
 
-                                <td></td>
-                                <td></td>
                          </tr>
                            <?php $i++; ?>
                         <?php endforeach ?>
+                        </tbody>
                     </table>
-                </td>
-            </tr>
-            </table>
+
         </div>
     </div>
 </form>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#example').dataTable();
+    });
+</script>
+
 
 
 

@@ -1,15 +1,22 @@
 
 <div id='wrapper'>
 
-    <h1>Estimation Calculator</h1>
+    <h1>Estimations for testing program :<?=$estimates[0]['test_program_desc'] ?></h1>
 
     <!-- Left side with all the controls -->
     <div id='controls'>
         <form name='myForm' >
 
-
+            <h2>Testing program: <?=$estimates[0]['test_program_desc'] ?></h2>
             <h2 id='h2sp'>Hours: Type: Name:</h2>
             <?php $i = 1; foreach($estimates  as $est): ?>
+                <div id='hours-error'></div>
+                <div id='years-error'></div>
+                <div id='work-error'></div>
+                <div id='subj-error'></div>
+                <div id='res-error'></div>
+                <div id='resname-error'></div>
+
                 <div class='hrs' id='input<?=$i ?>'>
                 <select id='year<?=$i ?>' name='year<?=$i ?>'  value=<?=$est['year']?> onchange="recalc()" >
                     <option value=''>Select</option>
@@ -23,7 +30,13 @@
                             <option <?php if($opt['work_type_code'] == $est['work_type_code']) { ?> selected="<?php echo $opt['work_type_code']; ?>" <?php } ?> value="<?php echo $opt['work_type_code']; ?>"><?php echo $opt['work_type_desc']; ?></option>
                         <?php endforeach ?>
                     </select>
-                <input type ="text" id='subj<?=$i ?>' name='subj<?=$i ?>' maxlength='14' value=<?=$est['test_subject_code']?> onkeyup="recalc()" />
+                <select id='subj<?=$i ?>' name='subj<?=$i ?>' onchange="recalc()">
+                        <option value=''>Select</option>
+                        <?php foreach($subjs  as $subj): ?>
+                            <option <?php if($subj['test_subject_code'] == $est['test_subject_code']) { ?> selected="<?php echo $subj['test_subject_code']; ?>" <?php } ?> value="<?php echo $subj['test_subject_code']; ?>"><?php echo $subj['test_subject_desc']; ?></option>
+                        <?php endforeach ?>
+                </select>
+
                 <input type="text" name="hr<?=$i ?>" id="hr<?=$i ?>" onkeyup="recalc()" value=<?=$est['hours']?> />
                 <select class='drpBox' id='res<?=$i ?>' name='res<?=$i ?>' onchange="recalc()">
                     <option value=''>Select</option>
@@ -32,12 +45,13 @@
                     <?php endforeach ?>
                 </select>
                 <input type="text" name="name<?=$i ?>" id="name<?=$i ?>" onkeyup="recalc()" value=<?=$est['resource_name'] ?> >
+
                 </div>
             <?php $i++; endforeach ?>
             <br/>
             <input type='button' id='more' value='More'>
             <input type='button' id='btnDel' value='Remove' />
-
+            <input type='hidden' id='testProgramCode' value='<?=$currentPckg['test_program_code'] ?>'
             <br/><br/>
         </form>
     </div>
@@ -45,45 +59,56 @@
     <div id='preview'>
         <div id='card-background'>
             <div id='canvas'>
-                <div id='test-program-output'></div>
+                <div id='test-program-output'><h2>Testing program: <?=$estimates[0]['test_program_desc'] ?></h2></div>
                 <table id='est' class='tableData'>
-                    <tbody>
-                    <tr id="firstrow">
-                        <td>Year</td>
-                        <td>Work</td>
-                        <td>Subject</td>
-                        <td>Resource Type</td>
-                        <td>Hours</td>
-                        <td>Rate/hour</td>
-                        <td>Name</td>
-                    </tr>
-                    <?php $i=1; foreach($estimates  as $est): ?>
-                    <tr class="rowcls" id="row<?=$i ?>">
-                        <td><?=$est['year']?></td>
-                        <td><?=$est['work_type_code']?></td>
-                        <td><?=$est['test_subject_code']?></td>
-                        <td><?=$est['resource_type_code']?></td>
-                        <td><?=$est['hours']?></td>
-                        <td><?=$est['hours']?></td>
-                        <td><?=$est['resource_name']?></td>
-                    </tr>
-                    <?php $i++ ; endforeach ?>
+                    <thead>
+                        <tr id="firstrow">
+                            <td>Year</td>
+                            <td>Work</td>
+                            <td>Subject</td>
+                            <td>Resource Type</td>
+                            <td>Hours</td>
+                            <td>Rate/hour</td>
+                            <td>Name</td>
+
+                        </tr>
+                    </thead>
+                    <tbody id="ebody">
+                         <?php $i=1; foreach($estimates  as $est): ?>
+                            <tr class="rowcls" id="row<?=$i?>">
+                                <td><?=$est['year']?></td>
+                                <td><?=$est['work_type_desc']?></td>
+                                <td><?=$est['test_subject_desc']?></td>
+                                <td><?=$est['resource_type_desc']?></td>
+                                <td><?=$est['hours']?></td>
+                                <td><?=$est['hourly_rate']?></td>
+                                <td><?=$est['resource_name']?></td>
+
+                            </tr>
+                        <?php $i++ ; endforeach ?>
                     </tbody>
                 </table>
             </div>
         </div>
+
         <div id='total-hours-output'>Total hours : <?=$totalHrs?></div> <BR>
         <div id='total-amount-output'>Total amount : <?=$totalAmt?></div> <BR>
 
         <!-- Buttons -->
         <input type='button' id='refresh-btn' value='Start over'>
         <input type='button' id='save' value='Save' onclick='updateEst(<?=$pckgid ?>)'>
+
+
         <div id='results'></div>
 
     </div>
 
 </div>
 <!-- end of wrapper -->
+
 <script src="/js/estimator.js"></script>
+<script src="/js/validate.js" /></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="/js/jquery.form.js"></script>
+
+

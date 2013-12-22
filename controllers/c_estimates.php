@@ -37,13 +37,21 @@ class estimates_controller extends base_controller {
             $user = $this->user->user_id;
 
             # Setup view
-            $q = "SELECT we.work_pckg_id, e.estimation_id, e.test_subject_code, e.work_type_code,rs.hourly_rate,
-                    e.year, e.hours, e.resource_type_code, e.resource_name
+            $q = "SELECT we.work_pckg_id, e.estimation_id, e.test_subject_code, e.work_type_code,rs.hourly_rate, rs.resource_type_desc,
+                        e.year, e.hours, e.resource_type_code, e.resource_name , w.work_type_desc,wp.test_program_code, tp.test_program_desc, ts.test_subject_desc
                     FROM work_pckg_estimates we INNER JOIN estimates e
-                     ON e.estimation_id = we .estimates_id
+                        ON e.estimation_id = we .estimates_id
+                     INNER JOIN work_package wp
+                        ON wp.work_pckg_id = we.work_pckg_id
                      INNER JOIN resource_type rs
-                     ON rs.resource_type_code = e.resource_type_code
-                     WHERE work_pckg_id = ".$pckgid. " and user_id = ".$user ;
+                        ON rs.resource_type_code = e.resource_type_code
+                     INNER JOIN work_type w
+                        ON w.work_type_code = e.work_type_code
+                     INNER JOIN test_program tp
+                        ON tp.test_program_code = wp.test_program_code
+                     INNER JOIN test_subject ts
+                        ON ts.test_subject_code = e.test_subject_code
+                     WHERE wp.work_pckg_id = ".$pckgid. " and wp.user_id = ".$user." order by e.estimation_id asc";
 
             $estimates = DB::instance(DB_NAME)->select_rows($q);
 
@@ -52,6 +60,28 @@ class estimates_controller extends base_controller {
 
             $q2= "select resource_type_code, resource_type_desc from resource_type order by resource_type_code asc";
             $restype = DB::instance(DB_NAME)->select_rows($q2);
+
+            $q3= "select test_subject_code, test_subject_desc from test_subject order by test_subject_code asc";
+            $subjs = DB::instance(DB_NAME)->select_rows($q3);
+
+            $q4 = "SELECT
+                    p.work_pckg_id,
+                    p.test_program_code,
+                    tp.test_program_desc,
+                    p.work_pckg_desc,
+                    p.requestor_name,
+                    p.user_id AS user_id,
+                    users.first_name,
+                    users.last_name
+                FROM work_package p
+                INNER JOIN users
+                    ON p.user_id = users.user_id
+                INNER JOIN test_program tp
+                    ON tp.test_program_code = p.test_program_code
+                WHERE users.user_id =".$user ."
+                    AND p.work_pckg_id= ".$pckgid ;
+
+                $workPckg = DB::instance(DB_NAME)->select_row($q4);
 
 
             if(!empty($estimates)){
@@ -66,12 +96,27 @@ class estimates_controller extends base_controller {
                 //echo $totalHrs.'|'.$totalAmt;
                 $this->template->content->work = $work;
                 $this->template->content->restype = $restype;
+                $this->template->content->subjs = $subjs;
                 $this->template->content->totalHrs = $totalHrs;
                 $this->template->content->totalAmt = $totalAmt;
                 $this->template->content->pckgid = $pckgid;
+                $this->template->content->currentPckg = $workPckg;
                 # Render template
-                echo $this->template;
+
+            } else {
+                $this->template->content = View::instance('v_estimates_add');
+                $this->template->title   = "Add Estimates";
+                $this->template->content->estimates = $estimates;
+                // print_r($hrs);
+                //echo $totalHrs.'|'.$totalAmt;
+                $this->template->content->work = $work;
+                $this->template->content->restype = $restype;
+                $this->template->content->subjs = $subjs;
+                $this->template->content->pckgid = $pckgid;
+                $this->template->content->currentPckg = $workPckg;
+
             }
+            echo $this->template;
         }
     }
 
@@ -83,6 +128,7 @@ class estimates_controller extends base_controller {
                $user = $this->user->user_id;
                $dataArr = $_POST['arr'];
                $pckgId =$_POST['workPckgId'];
+               $testPgmCode = $_POST['testPgmCode'];
             $q ="select estimates_id from work_pckg_estimates where work_pckg_id = ".$pckgId;
             //$estIdArr=DB::instance(DB_NAME)->select_array($q,"estimates_id");
             $estIdArr=DB::instance(DB_NAME)->select_rows($q);
@@ -97,42 +143,41 @@ class estimates_controller extends base_controller {
 
             }
 
-            if(count($estIdArr)> 0){
-               $where_condition2 = "WHERE estimation_id in (".$appendStr.")";
-               // echo $where_condition ."\n" . "| ".$where_condition2;
-               // echo $where_condition2;
-                DB::instance(DB_NAME)-> delete("work_pckg_estimates", $where_condition);
-                DB::instance(DB_NAME)-> delete("estimates", $where_condition2);
-            }
-
-
-           // rowArr[i] = [$(year[i]).val(),$(work[i]).val(),$(subj[i]).val(),$(myChildren[i]).val(),opt,$(resNames[i]).val()];
-                foreach ($dataArr as $v1) {
-                        $data = Array(
-                            "test_program_code" => 'GRE',
-                            "test_subject_code" => $v1[2],
-                            "year" => $v1[0],
-                            "work_type_code" => $v1[1],
-                            "hours" => $v1[3],
-                            "user_id" => $user,
-                            "resource_type_code" =>$v1[4],
-                            "resource_name" =>$v1[5]
-                        );
-
-                       $est= DB::instance(DB_NAME)->insert("estimates", $data);
-
-
-                      //  var_dump($est);
-                        $data2 = Array(
-                            "work_pckg_id" => $pckgId,
-                            "estimates_id" => $est
-                        );
-                        DB::instance(DB_NAME)->insert("work_pckg_estimates", $data2);
-                    //echo "done";
+                if(count($estIdArr)> 0){
+                   $where_condition2 = "WHERE estimation_id in (".$appendStr.")";
+                   // echo $where_condition ."\n" . "| ".$where_condition2;
+                   // echo $where_condition2;
+                    DB::instance(DB_NAME)-> delete("work_pckg_estimates", $where_condition);
+                    DB::instance(DB_NAME)-> delete("estimates", $where_condition2);
                 }
-                echo "success";
-            }
-    }
+
+               // rowArr[i] = [$(year[i]).val(),$(work[i]).val(),$(subj[i]).val(),$(myChildren[i]).val(),opt,$(resNames[i]).val()];
+                    $j=0;
+                    foreach ($dataArr as $v1) {
+                            $data = Array(
+                                "test_subject_code" => $v1[2],
+                                "year" => $v1[0],
+                                "work_type_code" => $v1[1],
+                                "hours" => $v1[3],
+                                "user_id" => $user,
+                                "resource_type_code" =>$v1[4],
+                                "resource_name" =>$v1[5]
+                            );
+
+                           $est= DB::instance(DB_NAME)->insert("estimates", $data);
+
+
+                          //  var_dump($est);
+                            $data2 = Array(
+                                "work_pckg_id" => $pckgId,
+                                "estimates_id" => $est
+                            );
+                        $response[$j] =  DB::instance(DB_NAME)->insert("work_pckg_estimates", $data2);
+                        $j++;
+                        echo "done";
+                    }
+                }
+     }
 
     /* Function for home page once the user logs in.
        This function gets the posts of the users that the logged in user follows.
@@ -150,6 +195,7 @@ class estimates_controller extends base_controller {
                 $q = "SELECT
                     p.work_pckg_id,
                     p.test_program_code,
+                    tp.test_program_desc,
                     p.work_pckg_desc,
                     p.requestor_name,
                     p.user_id AS user_id,
@@ -158,6 +204,8 @@ class estimates_controller extends base_controller {
                 FROM work_package p
                 INNER JOIN users
                     ON p.user_id = users.user_id
+                INNER JOIN test_program tp
+                    ON tp.test_program_code = p.test_program_code
                 WHERE users.user_id =".$user_id ." order by p.work_pckg_id DESC";
                 $packages = DB::instance(DB_NAME)->select_rows($q);
                 $packagesNew = $this-> updateAmount($packages,$user_id);

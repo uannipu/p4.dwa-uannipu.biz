@@ -71,10 +71,12 @@
      * This method calculates the hours and amount based on the input fields dynamically.
      */
   function recalc(){
+        validate();
+
         var tot = 0;
         var myChildren = $('.hrs').children("input[name*='hr']"); // get the values of hour field
         var names = $('.hrs').children("input[name*='name']"); // get the values of resource name field
-        var subj = $('.hrs').children("input[name*='subj']"); // get the values of resource name field
+        var subj = $('.hrs').children("select[name*='subj']"); // get the values of resource name field
         var work = $('.hrs').children("select[name*='typ']"); // get the values of resource name field
         var year = $('.hrs').children("select[name*='year']"); // get the values of resource name field
 
@@ -116,40 +118,46 @@
         // Apply the appropriate hourly rate based on the resource type
         for ( var i=0; i<res.length; i++){
             var opt = ($(res[i]).val());
-            var cnt = i+2;
+            var cnt = i+1;
             if(opt == 'D'){
                 rate =  rates['D']* Math.floor($(myChildren[i]).val());
-                 $('table tr:nth-child('+cnt+') td:nth-child(6)').html(rates['D']);
+                 $('#ebody tr:nth-child('+cnt+') td:nth-child(6)').html(rates['D']);
             } else if (opt == 'A'){
                 rate =  rates['A']* Math.floor($(myChildren[i]).val());
-                $('table tr:nth-child('+cnt+') td:nth-child(6)').html(rates['A']);
+                $('#ebody tr:nth-child('+cnt+') td:nth-child(6)').html(rates['A']);
             } else if (opt == 'B'){
                 rate =  rates['B']* Math.floor($(myChildren[i]).val());
-                $('table tr:nth-child('+cnt+') td:nth-child(6)').html(rates['B']);
+                $('#ebody tr:nth-child('+cnt+') td:nth-child(6)').html(rates['B']);
             } else if (opt == 'T'){
                 rate =  rates['T']* Math.floor($(myChildren[i]).val());
-                $('table tr:nth-child('+cnt+') td:nth-child(6)').html(rates['T']);
+                $('#ebody tr:nth-child('+cnt+') td:nth-child(6)').html(rates['T']);
             } else if(opt == ''){
                 rate = 0;
-                $('table tr:nth-child('+cnt+') td:nth-child(6)').html('');
+                $('#ebody tr:nth-child('+cnt+') td:nth-child(6)').html('');
             }
-            $('table tr:nth-child('+cnt+') td:nth-child(5)').html($(myChildren[i]).val());
-            $('table tr:nth-child('+cnt+') td:nth-child(7)').html($(names[i]).val());
+            $('#ebody tr:nth-child('+cnt+') td:nth-child(5)').html($(myChildren[i]).val());
+            $('#ebody tr:nth-child('+cnt+') td:nth-child(7)').html($(names[i]).val());
 
-            $('table tr:nth-child('+cnt+') td:nth-child(3)').html($(subj[i]).val());
-            $('table tr:nth-child('+cnt+') td:nth-child(1)').html($(year[i]).val());
+
+            $('#ebody tr:nth-child('+cnt+') td:nth-child(2)').html($(year[i]).val());
             //if drop down box value is empty, then set the text value to blank for the display purposes on the preview
             var resDesc =  $(res[i]).find("option:selected").text();
-            if(rate == 0){
+            if(opt == ''){
                 resDesc = '';
             }
+            var subjDesc =  $(subj[i]).find("option:selected").text();
+            if($(subj[i]).val() == '') subjDesc = '';
             var workTypeDesc =  $(work[i]).find("option:selected").text();
             if($(work[i]).val() == '') workTypeDesc = '';
             var yearDesc =  $(year[i]).find("option:selected").text();
             if($(year[i]).val() == '') yearDesc = '';
-            $('table tr:nth-child('+cnt+') td:nth-child(2)').html(workTypeDesc);
-            $('table tr:nth-child('+cnt+') td:nth-child(4)').html(resDesc);
-            $('table tr:nth-child('+cnt+') td:nth-child(1)').html(yearDesc);
+
+            $('#ebody tr:nth-child('+cnt+') td:nth-child(2)').html(workTypeDesc);
+            $('#ebody tr:nth-child('+cnt+') td:nth-child(4)').html(resDesc);
+            $('#ebody tr:nth-child('+cnt+') td:nth-child(1)').html(yearDesc);
+            $('#ebody tr:nth-child('+cnt+') td:nth-child(3)').html(subjDesc);
+           // $('#ebody tr:nth-child('+cnt+') td:nth-child(1)').html($('#eId').val());
+
             dollar = dollar + rate; // calculate the dollar amount in a loop
         }
         // set the output divs for the preview
@@ -161,17 +169,10 @@
     /**
     *   This method is invoked when a more method or remove method is clicked
     */
-    function validate(){
-        if( ($('#pgm').val().trim().length < 1 || $('#subj').val().trim().length < 1 || $('#year').val().trim().length < 1 || $('#typ').val().trim().length < 1)) {
-            alert('Please enter or select the required fields');
-            return false;// || $('#subj').val() ||$('#year').val() || $('#type').val())
-        }
-        return true;
-    }
 
     $(document).ready(function() {
          $('#more').click(function() {
-               if(true){
+               if(validate()){
                 // check the total number of divs with class=hrs, there is always a min of 1 div with hrs.
                 var num     = $('.hrs').length;
                 var newNum  = new Number(num + 1); // increment the number by 1
@@ -182,13 +183,17 @@
                 newElem.find("select[name^=typ]").attr('id', 'typ' + newNum).attr('typ', 'typ' + newNum).val('');
                 newElem.find("input[name^=subj]").attr('id', 'subj' + newNum).attr('subj', 'subj' + newNum).val('');
                 newElem.find("input[name^=hr]").attr('id', 'hr' + newNum).attr('hr', 'hr' + newNum).val('');
-                newElem.find("select[name^=res]").attr('id', 'res' + newNum).attr('name', 'res' + newNum).attr('value','');
+                newElem.find("select[name^=res]").attr('id', 'res' + newNum).attr('name', 'res' + newNum).val('');
                 newElem.children(':last').attr('id', 'name' + newNum).attr('name', 'name' + newNum).val(''); // after cloning, set the values to blanks
 
                 $('#input' + num).after(newElem); // add the new element after the previous input div element
                 $('#newElem').append('<BR>');
                 $('#input' + num).html='';
-                $('#btnDel').attr('disabled',false); // disable the remove button on load
+                if(num -1 == 1){
+                    $('#btnDel').attr('disabled',true); // disable the remove button on load
+                } else {
+                    $('#btnDel').attr('disabled',false);
+                }
 
                 // add new rows on the preview table at the same time , each time the more button is clicked.
                 var clsvar;
@@ -210,9 +215,9 @@
                      displayTyp = $('#typ').find("option:selected").text();
                  }
                 var typ =  $('#typ').find("option:selected").text();
-                $('table tr:nth-child('+num+') td:nth-child(3)').html(sub);
-                $('table tr:nth-child('+num+') td:nth-child(1)').html(yr);
-                $('table tr:nth-child('+num+') td:nth-child(2)').html(displayTyp);
+                $('#ebody tr:nth-child('+num+') td:nth-child(3)').html(sub);
+                $('#ebody tr:nth-child('+num+') td:nth-child(1)').html(yr);
+                $('#ebody tr:nth-child('+num+') td:nth-child(2)').html(displayTyp);
                }
               }); // end of more function
 
@@ -227,7 +232,7 @@
                  if (num-1 == 1)
                      $('#btnDel').attr('disabled',true);
              });
-             $('#btnDel').attr('disabled',true); // by default, remove button is disabled.
+           //  $('#btnDel').attr('disabled',true); // by default, remove button is disabled.
          });
 
         /*
@@ -265,7 +270,7 @@
 
             var myChildren = $('.hrs').children("input[name*='hr']"); // get the values of hour field
             var resNames = $('.hrs').children("input[name*='name']"); // get the values of resource name field
-            var subj = $('.hrs').children("input[name*='subj']"); // get the values of resource name field
+            var subj = $('.hrs').children("select[name*='subj']"); // get the values of resource name field
             var work = $('.hrs').children("select[name*='typ']"); // get the values of resource name field
             var year = $('.hrs').children("select[name*='year']"); // get the values of resource name field
 
@@ -284,12 +289,7 @@
                 var opt = ($(res[i]).val());
 
                 rowArr[i] = [$(year[i]).val(),$(work[i]).val(),$(subj[i]).val(),$(myChildren[i]).val(),opt,$(resNames[i]).val()];
-   /*             rowArr[i][1] = $('#sub');
-                rowArr[i][2]=$('#typ');
-                rowArr[i][3]=$('#year');
-                rowArr[i][4]=$('#typ');
-                rowArr[i][5]=$(myChildren[i]).val();
-                rowArr[i][6]=opt;*/;
+
                 if(opt == 'D'){
                     rate =  rates['D']* Math.floor($(myChildren[i]).val());
                 } else if (opt == 'A'){
@@ -316,17 +316,20 @@
 
     function updateEst(pckgId){
     //$('#save').click(function(pckgId) {
-       // alert('I am in : '+pckgId);
-        var arr = calculate();
-        $.ajax({
-            type:'POST',
-            url: '/estimates/p_add',
-            success: function(response) {
-                $('#results').html(response);
-            },
-            data: {
-                arr:arr,
-                workPckgId: pckgId
-            }
-       });
+        if(validate()){
+         //   alert('validated!!');
+            var arr = calculate();
+            $.ajax({
+                type:'POST',
+                url: '/estimates/p_add',
+                success: function(response) {
+                    $('#results').html(response);
+                },
+                data: {
+                    arr:arr,
+                    workPckgId: pckgId,
+                    testPgmCode:$('#testProgramCode').val()
+                }
+            });
+        }
     }
