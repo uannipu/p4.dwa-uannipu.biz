@@ -25,8 +25,6 @@
 
         // Array to hold rates of resources by type
         var rates = {"D":100, "T" :75 , "B": 85, "A":120};
-        // select all the resources by the drop down box
-      //  var res = $('.hrs').children('select');
         var res = $('.hrs').children("select[name*='res']"); // get the values of hour field
 
         var dollar =0; var rate=0 ;
@@ -98,7 +96,7 @@
 
                 newElem.children(':first').attr('id', 'year' + newNum).attr('year', 'year' + newNum).val('');
                 newElem.find("select[name^=typ]").attr('id', 'typ' + newNum).attr('typ', 'typ' + newNum).val('');
-                newElem.find("input[name^=subj]").attr('id', 'subj' + newNum).attr('subj', 'subj' + newNum).val('');
+                newElem.find("select[name^=subj]").attr('id', 'subj' + newNum).attr('subj', 'subj' + newNum).val('');
                 newElem.find("input[name^=hr]").attr('id', 'hr' + newNum).attr('hr', 'hr' + newNum).val('');
                 newElem.find("select[name^=res]").attr('id', 'res' + newNum).attr('name', 'res' + newNum).val('');
                 newElem.children(':last').attr('id', 'name' + newNum).attr('name', 'name' + newNum).val(''); // after cloning, set the values to blanks
@@ -120,22 +118,7 @@
 
                 // add the row after the previous row in the preview
                 $('#row'+num).after(txt);
-
-                //pre-populate all the values already available into the preview
-                var num = $('.hrs').length +1;
-                var sub = $('#subj').val();
-                var yr = $('#year').val();
-                var typ =  $('#typ').find("option:selected").val();
-                 if(typ == ''){
-                    var displayTyp = '';
-                 } else {
-                     displayTyp = $('#typ').find("option:selected").text();
                  }
-                var typ =  $('#typ').find("option:selected").text();
-                $('#ebody tr:nth-child('+num+') td:nth-child(3)').html(sub);
-                $('#ebody tr:nth-child('+num+') td:nth-child(1)').html(yr);
-                $('#ebody tr:nth-child('+num+') td:nth-child(2)').html(displayTyp);
-               }
               }); // end of more function
 
              // this method is invoked when remove button is clicked, removes the bottom most row and disables when the available row is just 1
@@ -154,7 +137,7 @@
                 $('#btnDel').attr('disabled',true);
          });
 
-        /*
+            /*
          * This method is used for starting over the entry all over.
          */
         $('#refresh-btn').click(function() {

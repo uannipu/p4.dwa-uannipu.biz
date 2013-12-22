@@ -122,7 +122,7 @@
 
 
         function validate(){
-            if(validateHours()&& validateYear()&& validateWork()&& validateSubj()&& validateRestype() && validateResname()){
+            if(validateYear()&& validateWork()&& validateSubj()&& validateHours()&& validateRestype() && validateResname()){
                 return true
             }
             return false;
