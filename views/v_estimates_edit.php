@@ -9,15 +9,13 @@
             <h2><div id='results'></div></h2>
             <h2>Testing program: <?=$estimates[0]['test_program_desc'] ?></h2>
             <h2 id='h2sp'>Hours: Type: Name:</h2>
-            <?php $i = 1; foreach($estimates  as $est): ?>
-
                 <div id='hours-error'></div>
                 <div id='years-error'></div>
                 <div id='work-error'></div>
                 <div id='subj-error'></div>
                 <div id='res-error'></div>
                 <div id='resname-error'></div>
-
+            <?php $i = 1; foreach($estimates  as $est): ?>
                 <div class='hrs' id='input<?=$i ?>'>
                 <select id='year<?=$i ?>' name='year<?=$i ?>'  value=<?=$est['year']?> onchange="recalc()" >
                     <option value=''>Select</option>

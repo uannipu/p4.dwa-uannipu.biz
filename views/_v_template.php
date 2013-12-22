@@ -23,7 +23,7 @@
 
 <body>
 <div id="container">
-    <div id="header"> <p>Plan <View></View></p></div>
+    <div id="header"> <p>Plan View</p></div>
     <!-- Menu for users who are logged in -->
     <?php if($user): ?>
 

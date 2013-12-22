@@ -103,21 +103,22 @@ input[type=button]:active {
 Layout
 -------------------------------------------------------------------------------------------------*/
 #wrapper {
-    width:1020px;
+    /*width:1020px; */
     margin:0px auto;
+    margin-left:250px;
+
 }
 
 /* Left column */
 #controls {
     width:600px;
     margin-right:5px;
-    float:left;
+    text-align:center;
 }
 
 /* Right column */
 #preview {
     width:625px;
-    float:left;
     text-align:center;
     border:10px;
 }
