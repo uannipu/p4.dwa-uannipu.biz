@@ -1,7 +1,7 @@
 
 <div id='wrapper'>
 
-    <h1 style {color:green;}>Estimations for Work package : <?=$currentPckg['work_pckg_desc'] ?> </h1>
+    <h1>Estimations for Work package : <?=$currentPckg['work_pckg_desc'] ?> </h1>
 
     <!-- Left side with all the controls -->
     <div id='controls'>
