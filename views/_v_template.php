@@ -4,14 +4,6 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link href="/css/main.css" rel="stylesheet" type="text/css" />
-<link href="/css/project.css" rel="stylesheet" type="text/css" />
-<link href="/css/features.css" rel="stylesheet" type="text/css" />
-<link href="/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script class="jsbin" src="http://datatables.net/download/build/jquery.dataTables.nightly.js"></script>
-<script type="text/javascript" src="/js/menu.js"></script>
 
 <title><?php if(isset($title)) echo $title; ?></title>
 					
@@ -64,6 +56,14 @@
 </div>
 
 </div>
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+<link href="/css/project.css" rel="stylesheet" type="text/css" />
+<link href="/css/features.css" rel="stylesheet" type="text/css" />
+<link href="/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script class="jsbin" src="http://datatables.net/download/build/jquery.dataTables.nightly.js"></script>
+
 </body>
 
 </html>
