@@ -9,10 +9,10 @@
             <p> </p>
         </div>
         <div>
-        <p>  <?php if(isset($error)):?>User with this email id already exists <?php endif; ?> </p>
+        <p>  <?php if(isset($error)): $error ?><?php endif; ?> </p>
 
                     <h3>View Work Packages</h3>
-                    <p>List of packges assigned to application : </p>
+                    <p>List of packages assigned to application : </p>
                     <table class="topics" id="example">
                         <thead>
                         <tr>
