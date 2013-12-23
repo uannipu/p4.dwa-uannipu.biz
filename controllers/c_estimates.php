@@ -214,16 +214,11 @@ class estimates_controller extends base_controller {
                     ON tp.test_program_code = p.test_program_code
                 WHERE users.user_id =".$user_id ." order by p.work_pckg_id DESC";
                 $packages = DB::instance(DB_NAME)->select_rows($q);
-                if(!empty($packages)){
-                    $this->template->content->error = "There are no work packages assigned for this user, please contact admin" ;
-                } else {
-                    $packagesNew = $this-> updateAmount($packages,$user_id);
-                    # Pass data to the View
-                    $this->template->content->packagesNew = $packagesNew ;
-                }
+                $packagesNew = $this-> updateAmount($packages,$user_id);
+                # Pass data to the View
+                $this->template->content->packagesNew = $packagesNew ;
                 # Render the View
                 echo $this->template;
-
             }
     }
 
