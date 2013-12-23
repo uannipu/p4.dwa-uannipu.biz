@@ -149,8 +149,8 @@
                 $("#est tr:gt(1)").remove();
                 //clear the contents of tds in second row
 
-                for (var i =0; i< 8;i++){
-                    $('#ebody tr:nth-child(2) td:nth-child('+i+')').html("");
+                for (var i =0; i< 7;i++){
+                    $('#ebody tr:nth-child(1) td:nth-child('+i+')').html("");
                 }
                 //reset all the input fields on the form
                 $("input[type=text], select").val("");
