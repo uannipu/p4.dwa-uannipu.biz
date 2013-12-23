@@ -42,7 +42,13 @@ class users_controller extends base_controller {
     if (strlen($_POST['email_id']) < 1) {
         $this->template->content->error_email_id = "Email id is required.";
         $flg = 'true';
+    } else{
+        if (!preg_match("/\S+@\S+\.\S+/", $_POST['email_id'])){
+            $this->template->content->error_email_id = "Email id is not valid.";
+            $flg = 'true';
+        }
     }
+
 
     if(isset($_POST['password'],$_POST['repwd'])){
         if($_POST['password'] != $_POST['repwd']){
