@@ -168,6 +168,7 @@
                 $('#subj-error').html("");
                 $('#res-error').html("");
                 $('#resname-error').html("");
+                $('#results').html("");
         });
 
        /*
