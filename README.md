@@ -13,7 +13,8 @@ Multiple estimates can be associated to a particular work package.
 
 The index page, lists all work packages related to a user and package details. Once the work package is clicked, a user is directed to either add estimates
 screen or edit screen.
-There is javascript on the edit screen , that calculates the total hours and total amounts.
+There is javascript on the edit screen , that calculates the total hours and total amounts. I used JQuery in the javascript and JQuery data grid plug in for the home/index page.
+In order to enter estimates, you have to click on the work package link on the home page.
 
 Once the estimates are entered, they can be saved in the database via ajax call. The success message is displayed on the screen once the data is saved successfully.
 
