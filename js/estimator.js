@@ -150,7 +150,7 @@
                 //clear the contents of tds in second row
 
                 for (var i =0; i< 8;i++){
-                    $('table tr:nth-child(2) td:nth-child('+i+')').html("");
+                    $('#ebody tr:nth-child(2) td:nth-child('+i+')').html("");
                 }
                 //reset all the input fields on the form
                 $("input[type=text], select").val("");
@@ -161,10 +161,13 @@
                 // clear contents of amount and hours and pgm in the preview screen
                 $('#total-amount-output').html("");
                 $('#total-hours-output').html("");
-                $('#test-program-output').html("");
-                $('#subj-error').html("Max 14 chars");
-                $('#pgm-error').html("Max 14 chars");
 
+                $('#hours-error').html("");
+                $('#years-error').html("");
+                $('#work-error').html("");
+                $('#subj-error').html("");
+                $('#res-error').html("");
+                $('#resname-error').html("");
         });
 
        /*
